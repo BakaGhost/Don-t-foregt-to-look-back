@@ -26,6 +26,8 @@ public class LampeScript : MonoBehaviour
 
     public bool lampActivated = true;
     public bool discharged = false;
+    private MonsterStateMachine lastSpottedMonster;
+    
     
     private void OnEnable()
     {
@@ -78,6 +80,9 @@ public class LampeScript : MonoBehaviour
         
         GameObject closestValidObject = null;
         float minDistance = float.MaxValue;
+        
+        bool monsterIsIlluminated = false; 
+        MonsterStateMachine currentMonster = null;
 
         foreach (RaycastHit hit in hits)
         {
@@ -89,9 +94,28 @@ public class LampeScript : MonoBehaviour
 
             if (angleToObject <= maxAngle)
             {
-                return;
-                // Debug.Log("hit " +  hit.collider.name);
+                if (hit.collider.gameObject.CompareTag("Monster"))
+                {
+                    Debug.Log(hit.collider.gameObject.name);
+                    currentMonster = hit.collider.GetComponentInParent<MonsterStateMachine>();
+                
+                    if (currentMonster != null)
+                    {
+                        monsterIsIlluminated = true;
+                        break;
+                    }
+                }
             }
+        }
+        if (monsterIsIlluminated && currentMonster != null)
+        {
+            currentMonster.TriggerStun();
+            lastSpottedMonster = currentMonster; 
+        }
+        else if (!monsterIsIlluminated && lastSpottedMonster != null)
+        {
+            lastSpottedMonster.ReleaseStun();
+            lastSpottedMonster = null; 
         }
     }
 
@@ -106,6 +130,10 @@ public class LampeScript : MonoBehaviour
         {
             lampLight.enabled = !lampLight.enabled;
             lampActivated = !lampActivated;
+            if (!lampLight.enabled)
+            {
+                ReleaseCurrentMonster();
+            }
         }
     }
 
@@ -114,11 +142,21 @@ public class LampeScript : MonoBehaviour
         lampLight.enabled = false;
         lampActivated = false;
         discharged = true;
+        ReleaseCurrentMonster();
     }
 
     public void Recharge()
     {
         currentEnergie = Mathf.Clamp(currentEnergie + rechargeAmount, 0, maxEnergie);
+    }
+    
+    private void ReleaseCurrentMonster()
+    {
+        if (lastSpottedMonster != null)
+        {
+            lastSpottedMonster.ReleaseStun();
+            lastSpottedMonster = null; 
+        }
     }
     
     private void OnDrawGizmosSelected()

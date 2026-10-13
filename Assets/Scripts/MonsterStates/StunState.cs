@@ -1,8 +1,14 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class StunState : MonsterState
 {
     MonsterStateMachine myStateMachine;
+    private NavMeshAgent myAgent;
+    public Intersection myDes;
+
+    private float t;
+    private Intersection currentDes = null;
     
     public override void Init()
     {
@@ -10,7 +16,7 @@ public class StunState : MonsterState
     }
     public override void Enter()
     {
-        return;
+        myAgent = myStateMachine.myAgent;
     }
     public override void UpdateState()
     {

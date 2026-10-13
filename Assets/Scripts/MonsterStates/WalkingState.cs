@@ -17,12 +17,13 @@ public class WalkingState : MonsterState
     public override void Enter()
     {
         myAgent = myStateMachine.myAgent;
+        myAgent.isStopped = false;
         ChangeDestination();
     }
     public override void UpdateState()
     {
         t += Time.deltaTime;
-        if (t > 0.2) return;
+        if (t < 0.2) return;
         if (!myAgent.pathPending && myAgent.remainingDistance <= myAgent.stoppingDistance)
         {
             if (!myAgent.hasPath || myAgent.velocity.sqrMagnitude == 0f)

@@ -1,7 +1,10 @@
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class MonsterStateMachine : MonoBehaviour
 {
@@ -15,9 +18,13 @@ public class MonsterStateMachine : MonoBehaviour
     
     [Header("Paramètres de ciblage (Cône de détection)")]
     [SerializeField] private float rayDistance = 10f;
+    [SerializeField] private float maxRayDistance = 10f;
     [SerializeField] private float sphereRadius = 2f;
-    [SerializeField] private float maxAngle = 60f;
+    [SerializeField] private float angle = 60f;
+    [SerializeField] private float maxAngle = 360f;
     [SerializeField] private LayerMask hitLayers;
+    private float usedRayDistance;
+    private float usedRayAngle;
     
     [Header("States")]
     MonsterState currentState;
@@ -28,14 +35,19 @@ public class MonsterStateMachine : MonoBehaviour
     
     [Header("NavMesh")]
     [HideInInspector] public NavMeshAgent myAgent;
-    
-    
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
+        usedRayAngle = angle;
+        usedRayDistance = rayDistance;
         myAgent = GetComponent<NavMeshAgent>();
         states = GetComponentsInChildren<MonsterState>();
+        
+        if (states.Length < 2)
+        {
+            Debug.LogError("Attention : Il manque des états (WalkingState/PursuitState) sur ce GameObject ou ses enfants !");
+            return;
+        }
         
         foreach (MonsterState state in states)
         {
@@ -53,9 +65,10 @@ public class MonsterStateMachine : MonoBehaviour
         currentState.Enter();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (currentState == null) return; 
+        
         CheckRaycast();
         currentState.UpdateState();
     }
@@ -63,23 +76,21 @@ public class MonsterStateMachine : MonoBehaviour
     public void CheckRaycast()
     {
         Vector3 origin = transform.position;
-        Vector3 rayDirection =transform.forward;
-        RaycastHit[] hits = Physics.SphereCastAll(origin, sphereRadius, rayDirection, rayDistance, hitLayers);
+        Vector3 rayDirection = transform.forward;
         
-        GameObject closestValidObject = null;
-        float minDistance = float.MaxValue;
-
+        Collider[] hits = Physics.OverlapSphere(origin, usedRayDistance, hitLayers);   
+        
         bool playerInSight = false;
         
-        foreach (RaycastHit hit in hits)
+        foreach (Collider hitCollider in hits)
         {
-            Vector3 targetPos = hit.collider.transform.position;
+            Vector3 targetPos = hitCollider.transform.position; 
             if (targetPos == origin) continue;
             
             Vector3 directionToObject = (targetPos - origin).normalized;
             float angleToObject = Vector3.Angle(rayDirection, directionToObject);
 
-            if (angleToObject <= maxAngle && hit.collider.gameObject.CompareTag("Player"))
+            if (angleToObject <= usedRayAngle && hitCollider.gameObject.CompareTag("Player"))
             {
                 playerInSight = true;
                 break;
@@ -88,11 +99,17 @@ public class MonsterStateMachine : MonoBehaviour
 
         if (playerInSight && currentState != states[1])
         {
+            usedRayDistance = maxRayDistance;
+            usedRayAngle = maxAngle;
             Transition(states[1]);
+            Debug.Log("Player In Sight");
         }
         else if (!playerInSight && currentState == states[1])
         {
+            usedRayDistance = rayDistance;
+            usedRayAngle = angle;
             Transition(states[0]);
+            Debug.Log("Player Out");
         }
     }
 
@@ -107,5 +124,37 @@ public class MonsterStateMachine : MonoBehaviour
         currentState = newState;
         
         currentState.Enter();
+    }
+    
+    private void OnDrawGizmosSelected()
+    {
+        Vector3 origin = transform.position;
+        Vector3 direction = transform.forward;
+
+        Gizmos.color = new Color(1, 0, 0, 0.2f);
+        Gizmos.DrawWireSphere(origin, usedRayDistance);
+
+#if UNITY_EDITOR
+        // CORRECTION : Ajout des signes "*" pour la multiplication des vecteurs
+        Vector3 leftBoundary = Quaternion.Euler(0, -usedRayAngle, 0) * direction;
+        Vector3 rightBoundary = Quaternion.Euler(0, usedRayAngle, 0) * direction;
+
+        Handles.color = new Color(1f, 0.92f, 0.016f, 0.2f);
+        Handles.DrawSolidArc(origin, Vector3.up, leftBoundary, usedRayAngle * 2, usedRayDistance);
+
+        Handles.color = Color.yellow;
+        Handles.DrawWireArc(origin, Vector3.up, leftBoundary, usedRayAngle * 2, usedRayDistance);
+
+        // CORRECTION : Ajout des signes "*" pour la multiplication des distances
+        Handles.DrawLine(origin, origin + leftBoundary * usedRayDistance);
+        Handles.DrawLine(origin, origin + rightBoundary * usedRayDistance);
+
+        GUIStyle textStyle = new GUIStyle();
+        textStyle.normal.textColor = Color.white;
+        textStyle.alignment = TextAnchor.MiddleCenter;
+        textStyle.fontStyle = FontStyle.Bold;
+        
+        Handles.Label(origin + Vector3.up * 2.5f, "Angle actuel : " + usedRayAngle + "°", textStyle);
+#endif
     }
 }

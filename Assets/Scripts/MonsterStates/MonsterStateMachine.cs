@@ -79,8 +79,7 @@ public class MonsterStateMachine : MonoBehaviour
 
             if (angleToObject <= maxAngle)
             {
-                return;
-                // Debug.Log("hit " +  hit.collider.name);
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
             }
         }
     }

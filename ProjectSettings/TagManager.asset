@@ -5,11 +5,13 @@ TagManager:
   serializedVersion: 3
   tags:
   - wall
+  - CinemachineTarget
+  - Recharge
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Lightable
   - Water
   - UI
   - 

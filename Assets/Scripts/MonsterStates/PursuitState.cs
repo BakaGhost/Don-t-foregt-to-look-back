@@ -1,8 +1,14 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PursuitState : MonsterState
 {
     MonsterStateMachine myStateMachine;
+    private NavMeshAgent myAgent;
+    public Intersection myDes;
+
+    private float t;
+    private Intersection currentDes = null;
     
     public override void Init()
     {

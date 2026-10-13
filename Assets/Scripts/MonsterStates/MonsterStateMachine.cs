@@ -69,6 +69,8 @@ public class MonsterStateMachine : MonoBehaviour
         GameObject closestValidObject = null;
         float minDistance = float.MaxValue;
 
+        bool playerInSight = false;
+        
         foreach (RaycastHit hit in hits)
         {
             Vector3 targetPos = hit.collider.transform.position;
@@ -77,10 +79,20 @@ public class MonsterStateMachine : MonoBehaviour
             Vector3 directionToObject = (targetPos - origin).normalized;
             float angleToObject = Vector3.Angle(rayDirection, directionToObject);
 
-            if (angleToObject <= maxAngle)
+            if (angleToObject <= maxAngle && hit.collider.gameObject.CompareTag("Player"))
             {
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+                playerInSight = true;
+                break;
             }
+        }
+
+        if (playerInSight && currentState != states[1])
+        {
+            Transition(states[1]);
+        }
+        else if (!playerInSight && currentState == states[1])
+        {
+            Transition(states[0]);
         }
     }
 

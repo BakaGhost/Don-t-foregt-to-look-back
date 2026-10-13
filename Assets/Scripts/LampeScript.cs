@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 public class LampeScript : MonoBehaviour
 {
@@ -9,6 +11,13 @@ public class LampeScript : MonoBehaviour
     private InputActionMap playerMap;
     public InputActionReference toggleLamp;
     
+    [Header("Energie")]
+    public Image energyBar;
+    public float maxEnergie;
+    private float currentEnergie;
+    public float rechargeAmount = 50f;
+    
+    
     [Header("Paramètres de ciblage (Cône de détection)")]
     [SerializeField] private float rayDistance = 10f;
     [SerializeField] private float sphereRadius = 2f;
@@ -16,6 +25,7 @@ public class LampeScript : MonoBehaviour
     [SerializeField] private LayerMask hitLayers;
 
     public bool lampActivated = true;
+    public bool discharged = false;
     
     private void OnEnable()
     {
@@ -32,12 +42,32 @@ public class LampeScript : MonoBehaviour
     void Start()
     {
         lampLight = GetComponentInChildren<Light>();
+        currentEnergie = maxEnergie;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (lampActivated) CheckRaycast();
+        if (lampActivated)
+        {
+            CheckRaycast();
+            UpdateBar();
+        }
+
+        if (!discharged)
+        {
+            if (currentEnergie <= 0)
+            {
+                TurnOff();
+            }
+        }
+    }
+
+    public void UpdateBar()
+    {
+        if (currentEnergie <= 0) return;
+        currentEnergie -= Time.deltaTime;
+        energyBar.fillAmount = currentEnergie / maxEnergie;
     }
     
     public void CheckRaycast()
@@ -59,18 +89,36 @@ public class LampeScript : MonoBehaviour
 
             if (angleToObject <= maxAngle)
             {
-                Debug.Log("hit " +  hit.collider.name);
+                return;
+                // Debug.Log("hit " +  hit.collider.name);
             }
         }
     }
 
     private void OnToggleLamp(InputAction.CallbackContext context)
     {
-        if (lampLight != null)
+        ToggleLamp();
+    }
+
+    private void ToggleLamp()
+    {
+        if (lampLight != null && currentEnergie > 0)
         {
             lampLight.enabled = !lampLight.enabled;
             lampActivated = !lampActivated;
         }
+    }
+
+    private void TurnOff()
+    {
+        lampLight.enabled = false;
+        lampActivated = false;
+        discharged = true;
+    }
+
+    public void Recharge()
+    {
+        currentEnergie = Mathf.Clamp(currentEnergie + rechargeAmount, 0, maxEnergie);
     }
     
     private void OnDrawGizmosSelected()

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - wall
   - CinemachineTarget
+  - Recharge
   layers:
   - Default
   - TransparentFX

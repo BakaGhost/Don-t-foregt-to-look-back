@@ -12,14 +12,11 @@
   <component name="ChangeListManager">
     <list default="true" id="c9dba023-832a-4598-a9f3-0602f7a84c6b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Don-t-foregt-to-look-back/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Don-t-foregt-to-look-back/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Playground 2.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Playground 2.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/ProgGhali.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/ProgGhali.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/ProgGhali/NavMesh-NavMesh Surface.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/ProgGhali/NavMesh-NavMesh Surface.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/ProgGhali/NavMesh-NavMesh Surface.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/ProgGhali/NavMesh-NavMesh Surface.asset.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/LampeScript.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/LampeScript.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/MonsterStates/MonsterStateMachine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MonsterStates/MonsterStateMachine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/MonsterStates/PursuitState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MonsterStates/PursuitState.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/MonsterStates/StunState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MonsterStates/StunState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/MonsterStates/WalkingState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MonsterStates/WalkingState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

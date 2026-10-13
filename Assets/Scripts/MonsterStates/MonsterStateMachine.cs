@@ -35,6 +35,8 @@ public class MonsterStateMachine : MonoBehaviour
     
     [Header("NavMesh")]
     [HideInInspector] public NavMeshAgent myAgent;
+    
+    
 
     void Start()
     {
@@ -102,14 +104,12 @@ public class MonsterStateMachine : MonoBehaviour
             usedRayDistance = maxRayDistance;
             usedRayAngle = maxAngle;
             Transition(states[1]);
-            Debug.Log("Player In Sight");
         }
         else if (!playerInSight && currentState == states[1])
         {
             usedRayDistance = rayDistance;
             usedRayAngle = angle;
             Transition(states[0]);
-            Debug.Log("Player Out");
         }
     }
 
@@ -125,6 +125,21 @@ public class MonsterStateMachine : MonoBehaviour
         
         currentState.Enter();
     }
+    public void TriggerStun()
+    {
+        if (currentState != states[2])
+        {
+            Transition(states[2]); 
+        }
+    }
+    public void ReleaseStun()
+    {
+        if (currentState == states[2])
+        {
+            Transition(states[0]);
+        }
+    }
+    
     
     private void OnDrawGizmosSelected()
     {

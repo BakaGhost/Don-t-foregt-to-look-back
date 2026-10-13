@@ -17,6 +17,7 @@ public class StunState : MonsterState
     public override void Enter()
     {
         myAgent = myStateMachine.myAgent;
+        myAgent.isStopped = true;
     }
     public override void UpdateState()
     {

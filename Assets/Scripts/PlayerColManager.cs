@@ -9,12 +9,14 @@ public class PlayerColManager : MonoBehaviour
         lampeScript = GetComponentInChildren<LampeScript>();
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (collision.collider.tag == "Recharge")
+        Debug.Log(hit.gameObject.name);
+    
+        if (hit.collider.CompareTag("Recharge"))
         {
             lampeScript.Recharge();
-            Destroy(collision.gameObject);
+            Destroy(hit.gameObject);
         }
     }
     

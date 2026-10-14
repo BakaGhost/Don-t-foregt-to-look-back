@@ -2722,7 +2722,7 @@ GameObject:
   - component: {fileID: 797633248}
   - component: {fileID: 797633247}
   m_Layer: 3
-  m_Name: Cube
+  m_Name: Recharge
   m_TagString: Recharge
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2735,7 +2735,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 797633246}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
   m_Name: 
@@ -2835,7 +2835,7 @@ Transform:
   m_GameObject: {fileID: 797633246}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.69519, y: 0.5, z: 28.8039}
+  m_LocalPosition: {x: 11.94519, y: 0.5, z: -0.44610023}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6539,6 +6539,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442673456}
     m_Modifications:
+    - target: {fileID: 42939968997391466, guid: 439737b79cd919c4e844f30d85072a84, type: 3}
+      propertyPath: m_Range
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6377618989736222314, guid: 439737b79cd919c4e844f30d85072a84, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

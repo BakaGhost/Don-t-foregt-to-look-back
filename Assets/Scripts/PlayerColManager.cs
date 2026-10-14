@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerColManager : MonoBehaviour
@@ -8,14 +9,13 @@ public class PlayerColManager : MonoBehaviour
     {
         lampeScript = GetComponentInChildren<LampeScript>();
     }
-
-    void OnCollisionEnter(Collision collision)
+    
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.collider.tag == "Recharge")
+        if (other.CompareTag("Recharge"))
         {
             lampeScript.Recharge();
-            Destroy(collision.gameObject);
+            Destroy(other.gameObject);
         }
     }
-    
 }

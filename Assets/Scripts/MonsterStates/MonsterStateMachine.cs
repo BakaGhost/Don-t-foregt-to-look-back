@@ -9,12 +9,12 @@ using UnityEditor;
 public class MonsterStateMachine : MonoBehaviour
 {
     public FirstPersonController playerController;
+    public LampeScript lampeScript;
     public List<Intersection> intersections;
     
     [Header("Paramètres de déplacement")]
-    public float speed;
-    public float runSpeed;
-    public float stunDuration;
+    public float speed = 2;
+    public float runSpeed = 6;
     
     [Header("Paramètres de ciblage (Cône de détection)")]
     [SerializeField] private float rayDistance = 10f;
@@ -31,7 +31,7 @@ public class MonsterStateMachine : MonoBehaviour
     MonsterState previousState;
     MonsterState nextState;
     public MonsterState firstState;
-    MonsterState[] states;
+    public MonsterState[] states;
     
     [Header("NavMesh")]
     [HideInInspector] public NavMeshAgent myAgent;
@@ -43,6 +43,7 @@ public class MonsterStateMachine : MonoBehaviour
         usedRayAngle = angle;
         usedRayDistance = rayDistance;
         myAgent = GetComponent<NavMeshAgent>();
+        myAgent.speed = speed;
         states = GetComponentsInChildren<MonsterState>();
         
         if (states.Length < 2)
@@ -94,8 +95,11 @@ public class MonsterStateMachine : MonoBehaviour
 
             if (angleToObject <= usedRayAngle && hitCollider.gameObject.CompareTag("Player"))
             {
-                playerInSight = true;
-                break;
+                if (lampeScript.currentEnergie > 0)
+                {
+                    playerInSight = true;
+                    break;
+                }
             }
         }
 
@@ -130,14 +134,13 @@ public class MonsterStateMachine : MonoBehaviour
         if (currentState != states[2])
         {
             Transition(states[2]); 
+            myAgent.speed = runSpeed;
         }
     }
     public void ReleaseStun()
     {
-        if (currentState == states[2])
-        {
             Transition(states[0]);
-        }
+            myAgent.speed = speed;
     }
     
     

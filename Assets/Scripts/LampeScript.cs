@@ -14,7 +14,7 @@ public class LampeScript : MonoBehaviour
     [Header("Energie")]
     public Image energyBar;
     public float maxEnergie;
-    private float currentEnergie;
+    public float currentEnergie;
     public float rechargeAmount = 50f;
     
     
@@ -67,9 +67,9 @@ public class LampeScript : MonoBehaviour
 
     public void UpdateBar()
     {
+        energyBar.fillAmount = currentEnergie / maxEnergie;
         if (currentEnergie <= 0) return;
         currentEnergie -= Time.deltaTime;
-        energyBar.fillAmount = currentEnergie / maxEnergie;
     }
     
     public void CheckRaycast()
@@ -96,7 +96,6 @@ public class LampeScript : MonoBehaviour
             {
                 if (hit.collider.gameObject.CompareTag("Monster"))
                 {
-                    Debug.Log(hit.collider.gameObject.name);
                     currentMonster = hit.collider.GetComponentInParent<MonsterStateMachine>();
                 
                     if (currentMonster != null)
@@ -143,6 +142,14 @@ public class LampeScript : MonoBehaviour
         lampActivated = false;
         discharged = true;
         ReleaseCurrentMonster();
+    }
+
+    public void Discharge()
+    {
+        currentEnergie = 0;
+        Debug.Log(currentEnergie);
+        TurnOff();
+        UpdateBar();
     }
 
     public void Recharge()
